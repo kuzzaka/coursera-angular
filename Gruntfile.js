@@ -50,7 +50,7 @@
              }
          },
          useminPrepare: {
-             html: 'app/menu.html',
+             html: 'app/*.html',
              options: {
                  dest: 'dist'
              }
