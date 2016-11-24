@@ -5,14 +5,14 @@ var gulp = require('gulp'),
     jshint = require('gulp-jshint'),
     stylish = require('jshint-stylish'),
     uglify = require('gulp-uglify'),
-    usemin = require('gulp-usemin'),
+    useref = require('gulp-useref'),
     imagemin = require('gulp-imagemin'),
     rename = require('gulp-rename'),
     concat = require('gulp-concat'),
     notify = require('gulp-notify'),
     cache = require('gulp-cache'),
     changed = require('gulp-changed'),
-    rev = require('gulp-rev'),
+    gulpif = require('gulp-if'),
     browserSync = require('browser-sync'),
     del = require('del'),
     ngannotate = require('gulp-ng-annotate');
@@ -30,16 +30,16 @@ gulp.task('clean', function() {
 
 // Default task
 gulp.task('default', ['clean'], function() {
-  gulp.start('usemin', 'imagemin', 'copyfonts');
+  gulp.start('useref', 'imagemin', 'copyfonts');
 });
 
-gulp.task('usemin', ['jshint'], function() {
-  return gulp.src('./app/dishdetail.html')
-      .pipe(usemin({
-        css: [minifycss(), rev()],
-        js: [ngannotate(), uglify(), rev()]
-      }))
-      .pipe(gulp.dest('dist/'));
+gulp.task('useref', function() {
+  return gulp.src('./app/*.html')
+      .pipe(useref())
+      .pipe(gulpif('*.js', ngannotate()))
+      .pipe(gulpif('*.js', uglify()))
+      .pipe(gulpif('*.css', minifycss()))
+      .pipe(gulp.dest('./dist'));
 });
 
 // Images
@@ -66,7 +66,7 @@ gulp.task('copyfonts', ['clean'], function() {
 // Watch
 gulp.task('watch', ['browser-sync'], function() {
   // Watch .js files
-  gulp.watch('{app/scripts/**/*.js,app/styles/**/*.css,app/**/*.html}', ['usemin']);
+  gulp.watch('{app/scripts/**/*.js,app/styles/**/*.css,app/**/*.html}', ['useref']);
   // Watch image files
   gulp.watch('app/images/**/*', ['imagemin']);
 
@@ -84,7 +84,7 @@ gulp.task('browser-sync', ['default'], function() {
   browserSync.init(files, {
     server: {
       baseDir: "dist",
-      index: "dishdetail.html"
+      index: "index.html"
     },
     browser: 'google chrome canary'
   });
