@@ -34,7 +34,7 @@ gulp.task('default', ['clean'], function() {
 });
 
 gulp.task('useref', function() {
-  return gulp.src('./app/*.html')
+  return gulp.src('./app/**/*.html')
       .pipe(useref())
       .pipe(gulpif('*.js', ngannotate()))
       .pipe(gulpif('*.js', uglify()))
