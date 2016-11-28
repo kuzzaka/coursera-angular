@@ -72,6 +72,12 @@ gulp.task('watch', ['browser-sync'], function() {
 
 });
 
+// Deploy
+gulp.task('deploy', function() {
+  gulp.src('./dist/**/*')
+      .pipe(gulp.dest('./json-server/public'))
+});
+
 gulp.task('browser-sync', ['default'], function() {
   var files = [
     'app/**/*.html',

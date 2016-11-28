@@ -6,3 +6,4 @@ app/fonts/
 bower_components/
 dist/
 node_modules/
+/json-server/public/

@@ -1,7 +1,9 @@
 {
   "name": "conFusion",
   "private": true,
-  "dependencies": {},
+  "dependencies": {
+    "json-server": "^0.9.1"
+  },
   "devDependencies": {
     "browser-sync": "^2.11.1",
     "del": "^2.2.0",
