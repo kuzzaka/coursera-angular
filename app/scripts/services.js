@@ -2,32 +2,24 @@
 
 angular.module('confusionApp')
     .constant('baseUrl', 'http://localhost:3000/')
-    .service('menuFactory', ['$http', 'baseUrl', function($http, baseUrl) {
+    .service('menuFactory', ['$resource', 'baseUrl', function($resource, baseUrl) {
 
       this.getDishes = function() {
-        return $http.get(baseUrl + 'dishes');
+        return $resource(baseUrl + 'dishes/:id', null, {'update': {method: 'PUT'}});
       };
 
-      this.getDish = function(index) {
-        return $http.get(baseUrl + 'dishees/' + index);
-      };
-
-      this.getPromotion = function(index) {
-        return $http.get(baseUrl + 'promotions/' + index);
+      this.getPromotions = function() {
+        return $resource(baseUrl + 'promotions/:id', null, {});
       }
 
     }])
 
-    .factory('corporateFactory',['$http', 'baseUrl', function($http, baseUrl) {
+    .factory('corporateFactory',['$resource', 'baseUrl', function($resource, baseUrl) {
 
       var corpfac = {};
 
       corpfac.getLeaders = function() {
-        return $http.get(baseUrl + 'leadership');
-      };
-
-      corpfac.getLeader = function(index) {
-        return $http.get(baseUrl + 'leadership/' + index);
+        return $resource(baseUrl + 'leadership/:id', null ,{});
       };
 
       return corpfac;

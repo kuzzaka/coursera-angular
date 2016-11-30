@@ -7,19 +7,16 @@ angular.module('confusionApp')
       $scope.tab = 1;
       $scope.filtText = '';
       $scope.showDetails = false;
-      $scope.dishes = {};
       $scope.showMenu = false;
       $scope.message = 'Loading ...';
-      menuFactory.getDishes()
-          .then(
-              function(response) {
-                $scope.dishes = response.data;
-                $scope.showMenu = true;
-              },
-              function(response) {
-                $scope.message = 'Error: ' + response.status + ' ' + response.statusText;
-              }
-          );
+      menuFactory.getDishes().query(function(response) {
+            $scope.dishes = response;
+            $scope.showMenu = true;
+          },
+          function(response) {
+            $scope.message = 'Error: ' + response.status + ' ' + response.statusText;
+          });
+
 
       $scope.select = function(setTab) {
         $scope.tab = setTab;
@@ -90,13 +87,12 @@ angular.module('confusionApp')
 
     .controller('DishDetailController', ['$scope', '$stateParams', 'menuFactory', function($scope, $stateParams, menuFactory) {
 
-      $scope.dish = {};
       $scope.showDish = false;
       $scope.message = 'Loading ...';
-      menuFactory.getDish(parseInt($stateParams.id, 10))
+      menuFactory.getDishes().get({id: parseInt($stateParams.id, 10)}).$promise
           .then(
               function(response) {
-                $scope.dish = response.data;
+                $scope.dish = response;
                 $scope.showDish = true;
               },
               function(response) {
@@ -106,17 +102,18 @@ angular.module('confusionApp')
 
     }])
 
-    .controller('DishCommentController', ['$scope', function($scope) {
+    .controller('DishCommentController', ['$scope', 'menuFactory', function($scope, menuFactory) {
 
-      $scope.mycomment = {rating: 5, comment: "", author: "", date: ""};
+      $scope.comment = {rating: 5, comment: "", author: "", date: ""};
 
       $scope.submitComment = function() {
 
-        $scope.mycomment.date = new Date().toISOString();
-        $scope.dish.comments.push($scope.mycomment);
+        $scope.comment.date = new Date().toISOString();
+        $scope.dish.comments.push($scope.comment);
+        menuFactory.getDishes().update({id: $scope.dish.id}, $scope.dish);
         $scope.commentForm.$setPristine();
 
-        $scope.mycomment = {rating: 5, comment: "", author: "", date: ""};
+        $scope.comment = {rating: 5, comment: "", author: "", date: ""};
       }
     }])
     .controller('IndexController', ['$scope', 'corporateFactory', 'menuFactory', function($scope, corporateFactory, menuFactory) {
@@ -124,30 +121,30 @@ angular.module('confusionApp')
       $scope.showDish = false;
       $scope.showPromo = false;
       $scope.showLeader = false;
-      menuFactory.getDish(0)
+      menuFactory.getDishes().get({id: 0}).$promise
           .then(
               function(response) {
-                $scope.dish = response.data;
+                $scope.dish = response;
                 $scope.showDish = true;
               },
               function(response) {
                 $scope.dishMessage = 'Error: ' + response.status + ' ' + response.statusText;
               }
           );
-      menuFactory.getPromotion(0)
+      menuFactory.getPromotions().get({id: 0}).$promise
           .then(
               function(response) {
-                $scope.promotion = response.data;
+                $scope.promotion = response;
                 $scope.showPromo = true;
               },
               function(response) {
                 $scope.promoMessage = 'Error: ' + response.status + ' ' + response.statusText;
               }
           );
-      corporateFactory.getLeader(3)
+      corporateFactory.getLeaders().get({id: 3}).$promise
           .then(
               function(response) {
-                $scope.chef = response.data;
+                $scope.chef = response;
                 $scope.showLeader = true;
               },
               function(response) {
@@ -158,15 +155,13 @@ angular.module('confusionApp')
     .controller('AboutController', ['$scope', 'corporateFactory', function($scope, corporateFactory) {
       $scope.showleaders = false;
       $scope.message = 'Loading ...';
-      corporateFactory.getLeaders()
-          .then(
-              function(response) {
-                $scope.leaders = response.data;
-                $scope.showLeaders = true;
-              },
-              function(response) {
-                $scope.message = 'Error: ' + response.status + ' ' + response.statusText;
-              }
-          );
+      $scope.leaders = corporateFactory.getLeaders(function(response) {
+            $scope.leaders = response;
+            $scope.showLeaders = true;
+          },
+          function(response) {
+            $scope.message = 'Error: ' + response.status + ' ' + response.statusText;
+          });
+
     }])
 ;
