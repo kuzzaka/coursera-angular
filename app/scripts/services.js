@@ -11,7 +11,6 @@ angular.module('confusionApp')
       this.getPromotions = function() {
         return $resource(baseUrl + 'promotions/:id', null, {});
       }
-
     }])
 
     .factory('corporateFactory',['$resource', 'baseUrl', function($resource, baseUrl) {
