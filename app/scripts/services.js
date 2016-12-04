@@ -9,19 +9,24 @@ angular.module('confusionApp')
       };
 
       this.getPromotions = function() {
-        return $resource(baseUrl + 'promotions/:id', null, {});
+        return $resource(baseUrl + 'promotions/:id');
       }
     }])
 
-    .factory('corporateFactory',['$resource', 'baseUrl', function($resource, baseUrl) {
+    .factory('corporateFactory', ['$resource', 'baseUrl', function($resource, baseUrl) {
 
       var corpfac = {};
 
       corpfac.getLeaders = function() {
-        return $resource(baseUrl + 'leadership/:id', null ,{});
+        return $resource(baseUrl + 'leadership/:id');
       };
 
       return corpfac;
     }])
 
+    .service('feedbackFactory', ['$resource', 'baseUrl', function($resource, baseUrl) {
+      this.getFeedback = function() {
+        return $resource(baseUrl + 'feedback/:id');
+      }
+    }])
 ;

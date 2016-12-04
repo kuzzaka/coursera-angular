@@ -62,7 +62,7 @@ angular.module('confusionApp')
 
     }])
 
-    .controller('FeedbackController', ['$scope', function($scope) {
+    .controller('FeedbackController', ['$scope', 'feedbackFactory', function($scope, feedbackFactory) {
 
       $scope.sendFeedback = function() {
 
@@ -72,6 +72,7 @@ angular.module('confusionApp')
         }
         else {
           $scope.invalidChannelSelection = false;
+          feedbackFactory.getFeedback().save($scope.feedback);
           $scope.feedback = {
             mychannel: "",
             firstName: "",
@@ -155,13 +156,12 @@ angular.module('confusionApp')
     .controller('AboutController', ['$scope', 'corporateFactory', function($scope, corporateFactory) {
       $scope.showleaders = false;
       $scope.message = 'Loading ...';
-      $scope.leaders = corporateFactory.getLeaders(function(response) {
+      corporateFactory.getLeaders().query(function(response) {
             $scope.leaders = response;
             $scope.showLeaders = true;
           },
           function(response) {
             $scope.message = 'Error: ' + response.status + ' ' + response.statusText;
           });
-
     }])
 ;
